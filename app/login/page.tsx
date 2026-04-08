@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { LoginForm } from "./login-form";
+import { Suspense } from "react"; 
 
 export const metadata: Metadata = {
   title: "Iniciar sesión",
@@ -14,7 +15,11 @@ export default function LoginPage() {
       title="Iniciar sesión"
       description="Inicia sesión o crea una cuenta nueva. El alta requiere confirmar el correo electrónico antes de poder acceder."
     >
-      <LoginForm />
+      {/* Añadimos el Suspense Boundary para que se cargue el formulario de login de forma asíncrona y no se bloquee la página */}
+      <Suspense fallback={<div className="text-center p-4">Cargando formulario...</div>}>
+        <LoginForm />
+      </Suspense>      
+      
       <p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
         ¿Ya confirmaste tu email?{" "}
         <Link
