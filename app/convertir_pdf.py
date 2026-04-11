@@ -17,24 +17,37 @@ def normalizar_espacios(texto):
 
 
 def extraer_opciones(bloque):
-    # Las opciones del PDF aparecen con etiquetas a) b) c) d)
-    inicio_opciones = re.search(r"(?im)(?:^|\n)\s*a\)\s*", bloque)
-    if not inicio_opciones:
+    # Buscamos el inicio de la opción a) de forma estricta al principio del bloque
+    inicio_a = re.search(r"(?im)(?:^|\n)\s*a\)\s*", bloque)
+    if not inicio_a:
         return normalizar_espacios(bloque), []
 
-    enunciado = normalizar_espacios(bloque[: inicio_opciones.start()])
-    texto_opciones = bloque[inicio_opciones.start() :]
+    enunciado = normalizar_espacios(bloque[: inicio_a.start()])
+    texto_opciones = bloque[inicio_a.start() :]
 
-    marcadores = list(re.finditer(r"(?im)(?:^|\n)\s*([a-d])\)\s*", texto_opciones))
+    # Definimos los marcadores que buscamos en orden
+    letras = ['a', 'b', 'c', 'd']
+    posiciones = []
+    
+    # Buscamos cada letra de forma secuencial
+    # La regex (?im)^... asegura que el marcador esté al inicio de una línea
+    cursor = 0
+    for letra in letras:
+        patron = re.compile(rf"(?im)^s*{letra}\)\s*")
+        match = patron.search(texto_opciones, cursor)
+        if match:
+            posiciones.append(match)
+            cursor = match.end() # Avanzamos el cursor para no encontrar la misma letra dos veces
+
     opciones_por_letra = {}
-
-    for i, match in enumerate(marcadores):
-        letra = match.group(1).lower()
+    for i, match in enumerate(posiciones):
+        letra = letras[i]
         ini = match.end()
-        fin = marcadores[i + 1].start() if i + 1 < len(marcadores) else len(texto_opciones)
+        # El final de esta opción es el inicio de la siguiente, o el final del texto
+        fin = posiciones[i + 1].start() if i + 1 < len(posiciones) else len(texto_opciones)
         opciones_por_letra[letra] = normalizar_espacios(texto_opciones[ini:fin])
 
-    opciones = [opciones_por_letra.get(letra, "") for letra in ("a", "b", "c", "d")]
+    opciones = [opciones_por_letra.get(letra, "") for letra in letras]
     return enunciado, opciones
 
 

@@ -208,7 +208,7 @@ export function TestClient() {
       // Necesitamos esto para calcular fallos y frecuencia
       const { data: progreso } = await supabase
          .from("progreso_usuario")
-         .select("pregunta_id, veces_fallada, veces_acertada")
+         .select("pregunta_id, veces_fallada, veces_acertada, ultima_vez")
          .eq("usuario_id", userId);
       
       // 2. Consulta base de preguntas filtrada por batería
@@ -235,11 +235,13 @@ export function TestClient() {
         const fallos = prog?.veces_fallada ?? 0;
         const aciertos = prog?.veces_acertada ?? 0;
         const total = fallos + aciertos;
+        const ultimaVez = prog?.ultima_vez ? new Date(prog.ultima_vez).getTime() : 0; // Convertimos a timestamp
         
         return {
           ...p,
           ratioError: total > 0 ? fallos / total : 0,
-          vecesRespondida: total
+          vecesRespondida: total,
+          ultimaVez
         };
       });
 
@@ -250,6 +252,9 @@ export function TestClient() {
       } else if (tipo === "menos_veces_preguntadas") {
         // Priorizar las menos respondidas
         listaProcesada.sort((a, b) => a.vecesRespondida - b.vecesRespondida);
+      } else if (tipo === "recientes") {
+        // ORDENAR POR FECHA: Más reciente primero
+        listaProcesada.sort((a, b) => b.ultimaVez - a.ultimaVez);
       } else {
         // General / Aleatorio
         listaProcesada.sort(() => Math.random() - 0.5);
@@ -387,6 +392,8 @@ export function TestClient() {
               ? "Tema"
               : tipo === "fallos"
                 ? "Fallos"
+                  : tipo === "recientes"
+                  ? "Últimas preguntas respondidas"
                 : "General"}
           </p>
           <h1 className="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-50">

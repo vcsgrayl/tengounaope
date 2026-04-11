@@ -10,6 +10,7 @@ const TIPOS_TEST = [
   { value: "menos_veces_preguntadas", label: "Menos veces preguntadas" },
   { value: "peor_respondidas", label: "Peor respondidas" },
   { value: "aleatorio", label: "Aleatorio" },
+  { value: "recientes", label: "Repetir últimas preguntas respondidas" },
 ] as const;
 
 const MODOS = [
