@@ -65,7 +65,7 @@ export function AppNav() {
           href="/"
           className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
         >
-          Mi tests
+          TengoUnaOPE
         </Link>
         <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
           {userEmail ? (
