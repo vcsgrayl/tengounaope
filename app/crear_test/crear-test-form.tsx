@@ -109,7 +109,7 @@ export function CrearTestForm() {
           Batería de preguntas
         </legend>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          Selecciona el conjunto de preguntas para este test.
+          Selecciona la batería de preguntas que quieres usar.
         </p>
         <div className="mt-4">
           <select
@@ -133,7 +133,7 @@ export function CrearTestForm() {
           Número de preguntas
         </legend>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          Define la longitud de la sesión.
+          Define el número de preguntas que quieres hacer.
         </p>
         <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
           {NUM_PREGUNTAS.map((n) => (
@@ -164,7 +164,7 @@ export function CrearTestForm() {
           Tipo de test
         </legend>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          Ajusta el foco del contenido.
+          Define el tipo de test que quieres hacer.
         </p>
         <div className="mt-4 space-y-2">
           {TIPOS_TEST.map((t) => (
