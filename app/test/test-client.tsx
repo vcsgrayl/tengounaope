@@ -438,11 +438,7 @@ export function TestClient() {
               de {total}
             </p>
             <p className="mt-1 text-center text-xs text-zinc-500 dark:text-zinc-400">
-              El detalle por pregunta quedó registrado en{" "}
-              <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-                progreso_usuario
-              </code>{" "}
-              (salvo IDs de demo).
+              El resultado de tu test ha sido guardado en la base de datos.
             </p>
 
             {!esEntrenamiento ? (

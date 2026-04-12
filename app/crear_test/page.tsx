@@ -11,7 +11,7 @@ export default function CrearTestPage() {
   return (
     <PageShell
       title="Crear test"
-      description="Elige cómo quieres practicar. La configuración se enviará a la pantalla del test."
+      description="Configura el test que quieres hacer."
     >
       <CrearTestForm />
     </PageShell>
