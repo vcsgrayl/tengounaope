@@ -9,6 +9,7 @@ const links = [
   { href: "/", label: "Inicio" },
   { href: "/login", label: "Iniciar sesión" },
   { href: "/crear_test", label: "Crear test" },
+  { href: "/estadisticas", label: "Estadísticas" },
 ] as const;
 
 export function AppNav() {
@@ -53,7 +54,7 @@ export function AppNav() {
         if (userEmail) {
           return link.href !== "/login";
         }
-        return link.href !== "/crear_test";
+        return link.href !== "/crear_test" && link.href !== "/estadisticas";
       }),
     [userEmail]
   );
