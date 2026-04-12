@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const NUM_PREGUNTAS = [5, 10, 15, 20, 30, 40] as const;
+const NUM_PREGUNTAS = [5, 10, 15, 20, 30, 40,50,100,150,200,250,300] as const;
 
 const TIPOS_TEST = [
   { value: "menos_veces_preguntadas", label: "Menos veces preguntadas" },
