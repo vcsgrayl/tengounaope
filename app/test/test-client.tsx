@@ -581,9 +581,25 @@ export function TestClient() {
                     : "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-100"
                 }`}
               >
-                {esCorrectaSeleccion
-                  ? "Correcto."
-                  : "Incorrecto. En simulacro este feedback podría ocultarse."}
+                {esCorrectaSeleccion ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">✅</span>
+                    <p className="font-medium">¡Correcto!</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">❌</span>
+                      <p className="font-bold">Respuesta incorrecta</p>
+                    </div>
+                    <p className="opacity-90">
+                      La opción correcta es la{" "}
+                      <span className="font-bold underline">
+                        {String.fromCharCode(65 + preguntaActual.indiceCorrecto)}
+                      </span>: {opcionesActuales[preguntaActual.indiceCorrecto]}
+                    </p>
+                  </div>
+                )}
               </p>
             )}
 
