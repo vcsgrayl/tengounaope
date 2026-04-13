@@ -583,13 +583,13 @@ export function TestClient() {
               >
                 {esCorrectaSeleccion ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">✅</span>
+                    <span className="text-lg"></span>
                     <p className="font-medium">¡Correcto!</p>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">❌</span>
+                      <span className="text-lg"></span>
                       <p className="font-bold">Respuesta incorrecta</p>
                     </div>
                     <p className="opacity-90">
