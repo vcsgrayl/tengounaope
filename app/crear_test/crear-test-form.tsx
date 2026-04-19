@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 
 const NUM_PREGUNTAS = [5, 10, 15, 20, 30, 40,50,100,150,200,250,300] as const;
 
+
 const TIPOS_TEST = [
   { value: "menos_veces_preguntadas", label: "Menos veces preguntadas" },
   { value: "peor_respondidas", label: "Peor respondidas" },
   { value: "aleatorio", label: "Aleatorio" },
   { value: "recientes", label: "Repetir últimas preguntas respondidas" },
+  { value: "desde_pregunta", label: "N preguntas seguidas desde..." },
 ] as const;
 
 const MODOS = [
@@ -46,6 +48,7 @@ export function CrearTestForm() {
   const [modo, setModo] = useState<(typeof MODOS)[number]["value"]>(
     "entrenamiento"
   );
+  const [desdeNumero, setDesdeNumero] = useState<number>(1);
 
   useEffect(() => {
     let cancelled = false;
@@ -86,7 +89,8 @@ export function CrearTestForm() {
       n: String(numPreguntas),
       tipo,
       modo,
-      bateria: bateriaId
+      bateria: bateriaId,
+      desde: String(desdeNumero)
     });
     router.push(`/test?${params.toString()}`);
   }
@@ -190,6 +194,36 @@ export function CrearTestForm() {
             </label>
           ))}
         </div>
+        {tipo === "desde_pregunta" && (
+          <div className="mt-4 p-4 rounded-xl border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/30">
+            <label className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase">
+              Empezar por la pregunta número:
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={desdeNumero} // Vinculado al estado
+              onChange={(e) => {
+                const val = e.target.value;
+                // Si está vacío, ponemos 0 temporalmente para que deje escribir
+                if (val === "") {
+                  setDesdeNumero(0);
+                  return;
+                }
+                // Convertimos a entero base 10 para evitar interpretaciones raras
+                const num = parseInt(val, 10);
+                if (!isNaN(num)) {
+                  setDesdeNumero(num);
+                }
+              }}
+              // Esto asegura que al hacer clic en el botón, se use el valor real
+              onBlur={() => {
+                if (desdeNumero < 1) setDesdeNumero(1);
+              }}
+              className="mt-2 w-full rounded-lg border border-zinc-200 p-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-100"
+            />
+          </div>              
+            )}        
       </fieldset>
 
       <fieldset>

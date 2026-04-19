@@ -26,8 +26,11 @@ function parseConfig(searchParams: URLSearchParams) {
   const tipo = searchParams.get("tipo") ?? "general";
   const modo = searchParams.get("modo") ?? "entrenamiento";
   const bateria = searchParams.get("bateria") ?? null;
+  const desde = Number(searchParams.get("desde")) || 1;
+
   const count = Number.isFinite(n) && n > 0 ? Math.min(Math.floor(n), 200) : 10;
-  return { n: count, tipo, modo, bateria };
+  
+  return { n: count, tipo, modo, bateria, desde };
 }
 
 function textoEnunciado(row: Record<string, unknown>): string {
@@ -137,7 +140,7 @@ async function guardarProgresoUsuario(payload: {
 export function TestClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { n, tipo, modo, bateria } = useMemo(
+  const { n, tipo, modo, bateria, desde } = useMemo(
     () => parseConfig(searchParams),
     [searchParams]
   );
@@ -255,8 +258,17 @@ export function TestClient() {
       } else if (tipo === "recientes") {
         // ORDENAR POR FECHA: Más reciente primero
         listaProcesada.sort((a, b) => b.ultimaVez - a.ultimaVez);
-      } else {
-        // General / Aleatorio
+      } else if (tipo === "desde_pregunta") {
+        console.log("DEBUG: Entrando en filtro 'desde_numero'");
+        console.log("DEBUG: Valor del parámetro 'desde':", desde);
+        listaProcesada = listaProcesada
+          .filter((p) => {
+            // Forzamos conversión a número de ambos para evitar errores de tipo
+            const numP = Number(p.num_pregunta);
+            return !isNaN(numP) && numP >= desde;
+          })
+          .sort((a, b) => (a.num_pregunta ?? 0) - (b.num_pregunta ?? 0)); // Orden correlativo
+      } else {        // General / Aleatorio
         listaProcesada.sort(() => Math.random() - 0.5);
       }
 
@@ -264,7 +276,11 @@ export function TestClient() {
       const seleccionadas = listaProcesada.slice(0, n);
 
       // 6. ORDENACIÓN FINAL: Siempre por num_pregunta (ascendente)
-      seleccionadas.sort((a, b) => (a.num_pregunta ?? 0) - (b.num_pregunta ?? 0));
+      // Solo re-ordenamos por número si NO es tipo "aleatorio" ni "recientes"
+      // Para "desde_numero", esto confirma el orden correlativo.
+      if (tipo !== "aleatorio" && tipo !== "recientes") {
+        seleccionadas.sort((a, b) => (Number(a.num_pregunta) ?? 0) - (Number(b.num_pregunta) ?? 0));
+      }
 
       // 7. Mapear al formato del Test
       const mapped = seleccionadas
@@ -392,8 +408,10 @@ export function TestClient() {
               ? "Tema"
               : tipo === "fallos"
                 ? "Fallos"
-                  : tipo === "recientes"
-                  ? "Últimas preguntas respondidas"
+                : tipo === "recientes"
+                ? "Últimas preguntas respondidas"
+                : tipo === "desde_numero"
+                ? 'Desde la nº ${desde}' // Etiqueta nueva
                 : "General"}
           </p>
           <h1 className="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
