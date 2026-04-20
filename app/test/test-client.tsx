@@ -278,9 +278,9 @@ export function TestClient() {
       // 6. ORDENACIÓN FINAL: Siempre por num_pregunta (ascendente)
       // Solo re-ordenamos por número si NO es tipo "aleatorio" ni "recientes"
       // Para "desde_numero", esto confirma el orden correlativo.
-      if (tipo !== "aleatorio" && tipo !== "recientes") {
+      //if (tipo !== "aleatorio" && tipo !== "recientes") {
         seleccionadas.sort((a, b) => (Number(a.num_pregunta) ?? 0) - (Number(b.num_pregunta) ?? 0));
-      }
+      //}
 
       // 7. Mapear al formato del Test
       const mapped = seleccionadas
